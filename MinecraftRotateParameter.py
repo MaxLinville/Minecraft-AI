@@ -443,13 +443,13 @@ def home_axes():
             smoothAccel(abs(yaw), "-")
     for i in range(5):
         pitch = (float(get_rotation()[0][1]))
-        if yaw < 0:
-            smoothAccel(abs(pitch),"+", "y")
+        if pitch < 0:
+            smoothAccel(abs(pitch),"-", "y")
         else:
-            smoothAccel(abs(pitch), "-", "y")
-    pyd.keyDown("t")
+            smoothAccel(abs(pitch), "+", "y")
+    '''pyd.keyDown("t")
     time.sleep(1/60)
-    pyd.keyUp("t")
+    pyd.keyUp("t")'''
 
 def add(x,y):
     x+=str(y)
@@ -461,8 +461,46 @@ def add_2(x,y):
         for q in range(0,400000):
             z.append(q)
 
-def main():
+def build_nxn_platform(n):
     home_axes()
+    press_crouch()
+    press_backward()
+    press_right()
+    time.sleep(1)
+    release_right()
+    release_backward()
+    press_left()
+    time.sleep(0.45)
+    release_left()
+    smoothAccel(80, "-",  "y")
+    for i in range(n):
+        if i%2 == 0:
+            build_line(n)
+            smoothAccel(90, "-")
+            build_line(1)
+            smoothAccel(90, "-")
+        else:
+            build_line(n)
+            smoothAccel(90)
+            build_line(1)
+            smoothAccel(90)
+    release_crouch()
+
+
+def build_line(n):
+    press_backward()
+    place()
+    if n >= 6:
+        time.sleep((n-1)/1.31)
+    elif n == 1:
+        time.sleep(0.8)
+    else:
+        time.sleep((n-1)/1.5)
+    release_backward()
+    stop_place()
+
+def main():
+    build_nxn_platform(5)
 
 if __name__ == '__main__':
     #import cProfile
