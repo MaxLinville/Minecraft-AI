@@ -316,7 +316,7 @@ def text_map():
 
     #ADD A THRESHOLD TO CONVERT ALL PIXELS LOWER THAN 220 TO 0 BLACK FOLLOWED BY PIXELS BRIGHTER THAN 220 TO 0 BLACK
 
-    cap5 = ImageGrab.grab(bbox = (0, 740, 1920, 800))
+    cap5 = ImageGrab.grab(bbox = (0, 680, 1920, 740))
     cap6 = cv2.cvtColor(np.array(cap5), cv2.COLOR_BGR2GRAY)
     (irrelevant, dirimagepre) = cv2.threshold(cap6, 220, 255, cv2.THRESH_TOZERO)
     (irrelevant, directionimage) = cv2.threshold(dirimagepre, 221, 255, cv2.THRESH_TOZERO_INV)
@@ -388,7 +388,8 @@ def get_coords():
 
 def get_rotation():
     morerandomjunk = text_map()[2].split()
-    angle_list = [morerandomjunk[5].replace('(', ''), (morerandomjunk[7].replace(')', '')).rstrip('.')]
+    print(morerandomjunk)
+    angle_list = [morerandomjunk[4].replace('(', ''), (morerandomjunk[6].replace(')', '')).rstrip('.')]
     cardinal = morerandomjunk[1]
 
     return(angle_list, cardinal)
@@ -470,7 +471,7 @@ def build_nxn_platform(n):
     release_right()
     release_backward()
     press_left()
-    time.sleep(0.45)
+    half_time()
     release_left()
     smoothAccel(80, "-",  "y")
     for i in range(n):
@@ -490,17 +491,43 @@ def build_nxn_platform(n):
 def build_line(n):
     press_backward()
     place()
-    if n >= 6:
-        time.sleep((n-1)/1.31)
+    if 1 < n <= 3:
+        time.sleep(((n-1)-0.129819)/1.30142)
     elif n == 1:
-        time.sleep(0.8)
+        time.sleep(0.61)
     else:
-        time.sleep((n-1)/1.5)
+        time.sleep((n*0.774-0.127)/(1/((-0.673318/n)+1.03125)))
     release_backward()
     stop_place()
 
+def testline(n):
+    home_axes()
+    press_crouch()
+    press_backward()
+    press_right()
+    time.sleep(1)
+    release_right()
+    release_backward()
+    press_left()
+    half_time()
+    release_left()
+    smoothAccel(80, "-",  "y")
+    build_line(n)
+    release_crouch()
+
+def half_time():
+    time.sleep(0.5)
+
 def main():
-    build_nxn_platform(5)
+    minutes = 4
+    for i in range(minutes):
+        press_right()
+        press_forward()
+        mine()
+        time.sleep(60+np.random.normal(5,1,None))
+        stop_mine()
+        release_right()
+        release_forward()
 
 if __name__ == '__main__':
     #import cProfile
